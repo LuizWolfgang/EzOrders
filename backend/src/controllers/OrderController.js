@@ -45,6 +45,20 @@ class OrderController {
         req.io.emit('statusChange', order);
         res.json(order);
     }
+    
+    async delete(req, res){
+        //DELETAR pedidos
+
+        const { id } = req.params;
+
+        const order = await Order.findByIdAndRemove(
+            {_id: id }, //esse ultimo id é o que veio dos params, o mongo vai igualar ele ao id do banco, se for igual vai fazer a alterçao
+            {new: true}// retorna o status atualizado toda vez que fizer a alteração dele
+        );
+        
+        req.io.emit('deleteOrder', order)
+        res.json(order);
+    }
 }
 
 module.exports = new OrderController();
